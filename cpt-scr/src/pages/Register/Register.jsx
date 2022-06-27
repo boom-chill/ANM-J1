@@ -9,19 +9,20 @@ import { useNavigate } from 'react-router-dom'
 import { DatePicker } from '@mui/x-date-pickers'
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
-import { width } from '@mui/system'
+import { registerSliceFetch } from './features/register'
+import moment from 'moment'
 
 function Register(props) {
     const dispatch = useDispatch()
     const navigate = useNavigate()
-    const user = useSelector((state) => state.userState.user)
-    const isUserFetching = useSelector(
-        (state) => state.userState.isUserFetching
+    const isRegisterFetching = useSelector(
+        (state) => state.registerState.isRegisterFetching
     )
-    const loginError = useSelector((state) => state.userState.error)
+    const registerError = useSelector((state) => state.registerState.error)
+    const isRegisterSuccess = useSelector(
+        (state) => state.registerState.isSuccess
+    )
 
-    const [email, setEmail] = useState('')
-    const [password, setPassword] = useState('')
     const [isSubmit, setIsSubmit] = useState(false)
     const [error, setError] = useState('')
     const [registerContent, setRegisterContent] = useState({
@@ -34,11 +35,11 @@ function Register(props) {
         address: '',
     })
 
-    // useEffect(() => {
-    //     if (user) {
-    //         navigate('/', { replace: true })
-    //     }
-    // }, [user])
+    useEffect(() => {
+        if (isRegisterSuccess && !isRegisterFetching) {
+            navigate('/login', { replace: true })
+        }
+    }, [isRegisterSuccess])
 
     const onTextFieldChange = (e) => {
         const { id, value } = e.target
@@ -52,25 +53,39 @@ function Register(props) {
     }
 
     const onSubmit = () => {
-        console.log(registerContent)
         setIsSubmit(true)
-        if (email === '' && password === '') {
+        if (
+            registerContent.email === '' ||
+            registerContent.password === '' ||
+            registerContent.passwordAgain === '' ||
+            registerContent.DOB === '' ||
+            registerContent.fullName === '' ||
+            registerContent.phone === '' ||
+            registerContent.address === ''
+        ) {
             setError('Please fill in the form')
             return
         }
+        if (registerContent.password != registerContent.passwordAgain) {
+            setError('password is defferent')
+            return
+        }
         if (
-            (!checkEmail(email) && email !== '') ||
-            email === '' ||
-            password === ''
+            (!checkEmail(registerContent.email) &&
+                registerContent.email !== '') ||
+            registerContent.email === '' ||
+            registerContent.password === ''
         ) {
             return
         }
-        // dispatch(
-        //     loginSliceFetch({
-        //         email,
-        //         password,
-        //     })
-        // )
+        dispatch(
+            registerSliceFetch({
+                ...registerContent,
+                DOB: `${registerContent.DOB.getDate()}/${
+                    registerContent.DOB.getMonth() + 1
+                }/${registerContent.DOB.getFullYear()}`,
+            })
+        )
     }
 
     const handleKeyDown = (e) => {
@@ -93,7 +108,7 @@ function Register(props) {
                 >
                     Register
                 </Typography>
-                {error !== '' || loginError ? (
+                {error !== '' || registerError ? (
                     <Typography
                         style={{
                             textAlign: 'center',
@@ -104,7 +119,7 @@ function Register(props) {
                         component="h2"
                         color={'error.main'}
                     >
-                        {error || loginError}
+                        {error || registerError}
                     </Typography>
                 ) : (
                     ''
@@ -176,6 +191,7 @@ function Register(props) {
                             },
                         })
                     }
+                    formatDate={(date) => moment(date).format('DD/MM/YYYY')}
                     renderInput={(params) => (
                         <TextField
                             {...params}

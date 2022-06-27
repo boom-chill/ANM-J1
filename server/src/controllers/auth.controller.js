@@ -111,11 +111,12 @@ export const postLogin = async (req, res) => {
         }
     } catch (error) {
         console.log(error)
-        res.status(500).json({ error: err })
+        res.status(500).json({ error: error })
     }
 }
 
 export const postRegister = async (req, res) => {
+    console.log('hehe')
     try {
         const { email, password } = req.body
         const data = req.body
@@ -125,7 +126,7 @@ export const postRegister = async (req, res) => {
         const existUser = await userModel.findOne({ email: email })
 
         if (existUser) {
-            return res.status(404).json({ message: 'Tên đăng nhập đã tồn tại' })
+            return res.status(500).json({ message: 'Tên đăng nhập đã tồn tại' })
         }
 
         //create password
@@ -166,6 +167,6 @@ export const postRegister = async (req, res) => {
         return res.status(200).json({ message: 'Đăng kí thành công' })
     } catch (error) {
         console.log(error)
-        res.status(500).json({ error: err })
+        res.status(500).json({ error: error })
     }
 }

@@ -3,14 +3,14 @@ import { createAction } from '@reduxjs/toolkit'
 import { BASE_API_URL } from '../../../api/index'
 import apiCall from './../../../sagas/api'
 import {
-    loginSliceSuccess,
-    loginSliceFail,
-    loginSliceFetch,
-} from '../../../redux/features/user'
+    registerSliceSuccess,
+    registerSliceFail,
+    registerSliceFetch,
+} from '../features/register'
 
 const API = `${BASE_API_URL}auth/register`
 
-function* postLogin(action) {
+function* postRegister(action) {
     const apiArgs = {
         API_CALL: {
             method: 'POST',
@@ -20,12 +20,13 @@ function* postLogin(action) {
                 Authorization: '', //`Bearer ${userData.accessToken}`,
             },
         },
-        successSlice: loginSliceSuccess,
-        failSlice: loginSliceFail,
+        successSlice: registerSliceSuccess,
+        failSlice: registerSliceFail,
     }
     yield call(apiCall, apiArgs)
+    console.log('action', action)
 }
 
-export function* loginSaga() {
-    yield takeEvery(loginSliceFetch.toString(), postLogin)
+export function* registerSaga() {
+    yield takeEvery(registerSliceFetch.toString(), postRegister)
 }

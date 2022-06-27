@@ -9,23 +9,18 @@ const userSchema = new Schema({
     },
     fullName: {
         type: String,
-        unique: true,
     },
     DOB: {
         type: Date,
-        unique: true,
     },
     phone: {
         type: String,
-        unique: true,
     },
     address: {
         type: String,
-        unique: true,
     },
     password: {
         type: String,
-        unique: true,
     },
     chatRooms: [
         {
@@ -45,7 +40,6 @@ const userSchema = new Schema({
     ],
     refreshToken: {
         type: String,
-        unique: true,
     },
 })
 
