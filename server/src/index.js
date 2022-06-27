@@ -152,12 +152,6 @@ mongoose
                     }
                 })
 
-                // socket.on('notifications', async(data) => {
-                //     if(data?.action == notiActionTypes.ACCEPT_FRIEND)
-                //         io.to(data.userID).emit('notifications', data)
-                //         // io.to(data.from).emit('notifications', data)
-                // })
-
                 socket.on('disconnect', () => {
                     //console.log('delete room', socket.id)
                     removeOnlineUser(socket.id)
