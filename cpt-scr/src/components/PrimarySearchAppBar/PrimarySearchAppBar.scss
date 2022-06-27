@@ -1,0 +1,11 @@
+.PrimarySearchAppBar_drop {
+    padding: 10px;
+    cursor: pointer;
+    border-radius: 6px;
+}
+
+.PrimarySearchAppBar_drop_hover {
+    &:hover {
+        background-color: #f1f1f1e0;
+    } 
+}

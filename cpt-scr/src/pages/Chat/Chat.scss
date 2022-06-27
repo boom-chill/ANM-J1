@@ -1,0 +1,43 @@
+.Chat_container {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    justify-content: flex-start;
+    align-items: start;
+    flex-direction: column;
+    .Chat_wrapper {
+        width: 100%;
+        display: flex;
+        justify-content: flex-start;
+        align-items: start;
+    }
+    .Chat_content {
+        width: 80%;
+        padding: 20px 10px 0 10px;
+        .Chat_content--message {
+            overflow: auto;
+            height: calc(100vh - 145px);
+            
+        }
+        .Chat_content--form { 
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            margin-top: 10px;
+            &--ipt {
+                width: 100%;
+                margin-right: 10px;
+            }
+        }
+    }
+    .Chat_queue {
+        overflow: auto;
+        width: 220px;
+        height: calc(100vh - 94px);
+        overflow: auto;
+        border-right: 1px solid #dfdfdf;
+        padding: 20px 10px 10px 10px;
+    }
+}
+
+
