@@ -12,6 +12,8 @@ import Login from './pages/Login/Login'
 import Chat from './pages/Chat/Chat'
 import { getUserSliceFetch, updateUser } from './redux/features/user'
 import { getLocalStorage } from './utils/localStorage'
+import Register from './pages/Register/Register'
+import Edit from './pages/User/Edit/Edit'
 
 function App() {
     const user = useSelector((state) => state.userState.user)
@@ -65,7 +67,17 @@ function App() {
                         </ProtectedRoute>
                     }
                 />
+                <Route
+                    path="/user/edit"
+                    element={
+                        <ProtectedRoute>
+                            <Edit />
+                        </ProtectedRoute>
+                    }
+                />
+
                 <Route path="/login" element={<Login />} />
+                <Route path="/register" element={<Register />} />
                 <Route path="*" element={<p>There's nothing here: 404!</p>} />
             </Routes>
         </BrowserRouter>
