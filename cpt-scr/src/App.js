@@ -68,6 +68,14 @@ function App() {
                     }
                 />
                 <Route
+                    path="/chat"
+                    element={
+                        <ProtectedRoute>
+                            <Chat socket={socket} />
+                        </ProtectedRoute>
+                    }
+                />
+                <Route
                     path="/user/edit"
                     element={
                         <ProtectedRoute>

@@ -4,13 +4,13 @@ import Button from '@mui/material/Button'
 import { useDispatch, useSelector } from 'react-redux'
 import axios from 'axios'
 import './Chat.scss'
+import './Chat-frame.scss'
 import moment from 'moment'
 import { BASE_API_URL } from './../../api/index'
 import PrimarySearchAppBar from '../../components/PrimarySearchAppBar/PrimarySearchAppBar'
 import { logoutSlice, updateUser } from '../../redux/features/user'
 import { Typography } from '@mui/material'
 import '../../components/word.scss'
-import './chat.css'
 import { useNavigate } from 'react-router-dom'
 import {
     addGetPreMessage,
@@ -177,6 +177,7 @@ function Chat(props) {
                 }
             }
         }
+        e.target.value = ''
     }
 
     const handleKeyDown = (e) => {
@@ -272,38 +273,58 @@ function Chat(props) {
                         {messages[curChatRoom[0]]?.messages?.map(
                             (messageContent, idx) =>
                                 messageContent.from !== user._id ? (
-                                    <div className="message" key={idx} id="you">
-                                        <div>
-                                            <div className="message-content">
-                                                {messageContent.messageType ===
-                                                'FILE' ? (
-                                                    <a
-                                                        href={`${BASE_API_URL}file/download?path=${messageContent.fileLink}&name=${messageContent.message}`}
-                                                        download
-                                                    >
+                                    <>
+                                        <div
+                                            style={{
+                                                marginLeft: '17px',
+                                                fontSize: '13px',
+                                                color: 'gray',
+                                                marginBottom: '2px',
+                                            }}
+                                        >
+                                            {curChatRoom[1].to.fullName}
+                                        </div>
+                                        <div
+                                            className="message"
+                                            key={idx}
+                                            id="you"
+                                        >
+                                            <div>
+                                                <div className="message-content">
+                                                    {messageContent.messageType ===
+                                                    'FILE' ? (
+                                                        <a
+                                                            href={`${BASE_API_URL}file/download?path=${messageContent.fileLink}&name=${messageContent.message}`}
+                                                            download
+                                                        >
+                                                            <div className="message-content--file">
+                                                                <p>
+                                                                    {`${messageContent.message}  `}
+                                                                </p>
+                                                                <InsertDriveFileIcon />
+                                                            </div>
+                                                        </a>
+                                                    ) : (
                                                         <p>
-                                                            {`${messageContent.message}  `}
-                                                            <InsertDriveFileIcon />
+                                                            {
+                                                                messageContent.message
+                                                            }
                                                         </p>
-                                                    </a>
-                                                ) : (
-                                                    <p>
-                                                        {messageContent.message}
-                                                    </p>
-                                                )}
-                                            </div>
-                                            <div className="message-meta">
-                                                <div id="time">
-                                                    {moment(
-                                                        messageContent.time
-                                                    ).format('hh:mm a')}
+                                                    )}
                                                 </div>
-                                                <p id="author">
+                                                <div className="message-meta">
+                                                    <div id="time">
+                                                        {moment(
+                                                            messageContent.time
+                                                        ).format('hh:mm a')}
+                                                    </div>
+                                                    {/* <p id="author">
                                                     {messageContent.author}
-                                                </p>
+                                                </p> */}
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
+                                    </>
                                 ) : (
                                     <div
                                         className="message"
@@ -318,10 +339,12 @@ function Chat(props) {
                                                         href={`${BASE_API_URL}file/download?path=${messageContent.fileLink}&name=${messageContent.message}`}
                                                         download
                                                     >
-                                                        <p>
+                                                        <div className="message-content--file">
                                                             <InsertDriveFileIcon />
-                                                            {`  ${messageContent.message}`}
-                                                        </p>
+                                                            <p>
+                                                                {`  ${messageContent.message}`}
+                                                            </p>
+                                                        </div>
                                                     </a>
                                                 ) : (
                                                     <p>
@@ -330,14 +353,14 @@ function Chat(props) {
                                                 )}
                                             </div>
                                             <div className="message-meta">
-                                                <p id="time">
+                                                <div id="time">
                                                     {moment(
                                                         messageContent.time
                                                     ).format('hh:mm a')}
-                                                </p>
-                                                <p id="author">
+                                                </div>
+                                                {/* <p id="author">
                                                     {messageContent.author}
-                                                </p>
+                                                </p> */}
                                             </div>
                                         </div>
                                     </div>
