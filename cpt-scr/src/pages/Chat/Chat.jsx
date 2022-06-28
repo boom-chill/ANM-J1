@@ -107,6 +107,7 @@ function Chat(props) {
     }
 
     const getPrevMessageBucket = async (chatRoom) => {
+        if (chatRoom[0] == curChatRoom[0]) return
         const seachRes = await axios.get(`${BASE_API_URL}message/previous`, {
             params: {
                 bucketSeq: chatRoom[1].seq,
