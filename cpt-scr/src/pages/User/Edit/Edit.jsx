@@ -9,18 +9,16 @@ import { DatePicker } from '@mui/x-date-pickers'
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
 import { checkEmail } from './../../../utils/checkEmail'
+import { BASE_API_URL } from './../../../api/index'
+import axios from 'axios'
+import { getUserSliceFetch, updateUser } from '../../../redux/features/user'
 
 function Edit(props) {
     const dispatch = useDispatch()
     const navigate = useNavigate()
     const user = useSelector((state) => state.userState.user)
-    const isUserFetching = useSelector(
-        (state) => state.userState.isUserFetching
-    )
-    const loginError = useSelector((state) => state.userState.error)
+    const editUserError = useSelector((state) => state.userState.error)
 
-    const [email, setEmail] = useState('')
-    const [password, setPassword] = useState('')
     const [isSubmit, setIsSubmit] = useState(false)
     const [error, setError] = useState('')
     const [registerContent, setRegisterContent] = useState({
@@ -30,11 +28,12 @@ function Edit(props) {
         address: '',
     })
 
-    // useEffect(() => {
-    //     if (user) {
-    //         navigate('/', { replace: true })
-    //     }
-    // }, [user])
+    useEffect(() => {
+        if (user) {
+            //navigate('/', { replace: true })
+            setRegisterContent(user)
+        }
+    }, [user])
 
     const onTextFieldChange = (e) => {
         const { id, value } = e.target
@@ -47,26 +46,17 @@ function Edit(props) {
         }))
     }
 
-    const onSubmit = () => {
+    const onSubmit = async () => {
         console.log(registerContent)
+        console.log(user)
         setIsSubmit(true)
-        if (email === '' && password === '') {
-            setError('Please fill in the form')
-            return
+        if (user) {
+            await axios.post(`${BASE_API_URL}user/edit`, {
+                ...registerContent,
+            })
+            dispatch(getUserSliceFetch(user._id))
+            navigate(-1)
         }
-        if (
-            (!checkEmail(email) && email !== '') ||
-            email === '' ||
-            password === ''
-        ) {
-            return
-        }
-        // dispatch(
-        //     loginSliceFetch({
-        //         email,
-        //         password,
-        //     })
-        // )
     }
 
     const handleKeyDown = (e) => {
@@ -93,7 +83,7 @@ function Edit(props) {
                 >
                     {user?.fullName}
                 </Typography>
-                {error !== '' || loginError ? (
+                {error !== '' || editUserError ? (
                     <Typography
                         style={{
                             textAlign: 'center',
@@ -104,7 +94,7 @@ function Edit(props) {
                         component="h2"
                         color={'error.main'}
                     >
-                        {error || loginError}
+                        {error || editUserError}
                     </Typography>
                 ) : (
                     ''

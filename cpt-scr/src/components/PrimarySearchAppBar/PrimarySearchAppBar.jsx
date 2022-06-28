@@ -1,5 +1,6 @@
 import * as React from 'react'
 import { styled, alpha } from '@mui/material/styles'
+import { Link, useNavigate } from 'react-router-dom'
 import AppBar from '@mui/material/AppBar'
 import Box from '@mui/material/Box'
 import Toolbar from '@mui/material/Toolbar'
@@ -60,6 +61,8 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 export default function PrimarySearchAppBar(props) {
     const { onSearchChange, searchUsers, onChooseUser, user, handleLogout } =
         props
+
+    const navigate = useNavigate()
     const [anchorEl, setAnchorEl] = React.useState(null)
     const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null)
     const [search, setSearch] = React.useState('')
@@ -101,6 +104,14 @@ export default function PrimarySearchAppBar(props) {
             open={isMenuOpen}
             onClose={handleMenuClose}
         >
+            <MenuItem
+                onClick={() => {
+                    navigate('/user/edit')
+                    handleMenuClose()
+                }}
+            >
+                Edit
+            </MenuItem>
             <MenuItem
                 onClick={() => {
                     handleLogout()
