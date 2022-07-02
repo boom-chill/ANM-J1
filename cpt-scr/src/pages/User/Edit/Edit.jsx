@@ -8,10 +8,7 @@ import { useNavigate } from 'react-router-dom'
 import { DatePicker } from '@mui/x-date-pickers'
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
-import { checkEmail } from './../../../utils/checkEmail'
-import { BASE_API_URL } from './../../../api/index'
-import axios from 'axios'
-import { getUserSliceFetch, updateUser } from '../../../redux/features/user'
+import { editSliceFetch } from './features/edit'
 
 function Edit(props) {
     const dispatch = useDispatch()
@@ -21,7 +18,7 @@ function Edit(props) {
 
     const [isSubmit, setIsSubmit] = useState(false)
     const [error, setError] = useState('')
-    const [registerContent, setRegisterContent] = useState({
+    const [editUserData, setEditUserData] = useState({
         DOB: '',
         fullName: '',
         phone: '',
@@ -31,7 +28,7 @@ function Edit(props) {
     useEffect(() => {
         if (user) {
             //navigate('/', { replace: true })
-            setRegisterContent(user)
+            setEditUserData(user)
         }
     }, [user])
 
@@ -40,21 +37,18 @@ function Edit(props) {
         if (error == 'Please fill in the form') {
             setError('')
         }
-        setRegisterContent((st) => ({
+        setEditUserData((st) => ({
             ...st,
             [id]: value,
         }))
     }
 
     const onSubmit = async () => {
-        console.log(registerContent)
+        console.log(editUserData)
         console.log(user)
         setIsSubmit(true)
         if (user) {
-            await axios.post(`${BASE_API_URL}user/edit`, {
-                ...registerContent,
-            })
-            dispatch(getUserSliceFetch(user._id))
+            dispatch(editSliceFetch({...editUserData}))
             navigate(-1)
         }
     }
@@ -104,9 +98,9 @@ function Edit(props) {
                     id="fullName"
                     label="Full name"
                     variant="outlined"
-                    value={registerContent.fullName}
+                    value={editUserData.fullName}
                     onChange={(e) => onTextFieldChange(e)}
-                    error={isSubmit && registerContent.fullName === ''}
+                    error={isSubmit && editUserData.fullName === ''}
                     onKeyDown={(e) => handleKeyDown(e)}
                 />
 
@@ -114,7 +108,7 @@ function Edit(props) {
                     id="DOB"
                     label="Date of birth"
                     inputFormat="dd/MM/yyyy"
-                    value={registerContent.DOB}
+                    value={editUserData.DOB}
                     sx={{ width: '400px' }}
                     onChange={(newValue) =>
                         onTextFieldChange({
@@ -129,8 +123,8 @@ function Edit(props) {
                             {...params}
                             sx={{ width: '210px' }}
                             className="login_form_input"
-                            value={registerContent.DOB}
-                            error={isSubmit && registerContent.DOB === ''}
+                            value={editUserData.DOB}
+                            error={isSubmit && editUserData.DOB === ''}
                         />
                     )}
                 />
@@ -140,9 +134,9 @@ function Edit(props) {
                     id="phone"
                     label="Phone"
                     variant="outlined"
-                    value={registerContent.phone}
+                    value={editUserData.phone}
                     onChange={(e) => onTextFieldChange(e)}
-                    error={isSubmit && registerContent.phone === ''}
+                    error={isSubmit && editUserData.phone === ''}
                     onKeyDown={(e) => handleKeyDown(e)}
                 />
                 <TextField
@@ -150,18 +144,27 @@ function Edit(props) {
                     id="address"
                     label="Address"
                     variant="outlined"
-                    value={registerContent.address}
+                    value={editUserData.address}
                     onChange={(e) => onTextFieldChange(e)}
-                    error={isSubmit && registerContent.address === ''}
+                    error={isSubmit && editUserData.address === ''}
                     onKeyDown={(e) => handleKeyDown(e)}
                 />
-
+            
                 <Button
                     className="login_form_btn"
                     variant="outlined"
                     onClick={() => onSubmit()}
+                    style={{marginBottom: '15px', width: '100px'}}
                 >
-                    Submit
+                    Edit
+                </Button>
+                <Button
+                    className="login_form_btn"
+                    variant="contained"
+                    onClick={() => navigate(-1)}
+                    style={{width: '100px'}}
+                >
+                    Back
                 </Button>
             </LocalizationProvider>
         </div>

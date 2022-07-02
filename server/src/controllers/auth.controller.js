@@ -1,10 +1,14 @@
 import { userModel } from '../models/user.model.js'
 import jwt from 'jsonwebtoken'
-import bcrypt from 'bcrypt'
+import saltedSha256 from 'salted-sha256'
 import dotenv from 'dotenv'
+import { genKey } from './../utils/genKey.js'
+import { encryptAES } from './../utils/crypto-AES.js'
 
 const expAccessTime = `${3 * 3600}s` // 3h
 const expRefreshTime = `${30 * 24 * 3600}s` // 30day
+
+const SALT = process.env.SALT
 
 dotenv.config()
 
@@ -80,10 +84,10 @@ export const postLogin = async (req, res) => {
         }
 
         //check password
-        const isPasswordCorrect = await bcrypt.compare(
-            password,
-            existUser.password
-        )
+        let isPasswordCorrect = false
+        if (saltedSha256(password, SALT) == existUser.password) {
+            isPasswordCorrect = true
+        }
 
         if (isPasswordCorrect) {
             const accessToken = jwt.sign(
@@ -96,6 +100,24 @@ export const postLogin = async (req, res) => {
                     expiresIn: expAccessTime,
                 }
             )
+
+            const key = genKey(existUser.password)
+
+            const encryptedPublicKey = encryptAES(
+                JSON.stringify(key.privateKey)
+            )
+
+            console.log('key', key)
+            console.log(encryptedPublicKey)
+
+            // const user = userModel.findByIdAndUpdate({
+            //     _id: existUser._id
+            // }, {
+            //     publicKey: key.publicKey,
+            //     privateKey: key.privateKey,
+            // })
+
+            // await user.save()
 
             res.status(200).json({
                 fullName: existUser.fullName,
@@ -130,10 +152,8 @@ export const postRegister = async (req, res) => {
         }
 
         //create password
-        const hashedPassword = bcrypt.hashSync(
-            password,
-            Number(process.env.SALT_ROUNDS)
-        )
+
+        const hashedPassword = saltedSha256(password, SALT)
 
         const refreshToken = jwt.sign(
             {
