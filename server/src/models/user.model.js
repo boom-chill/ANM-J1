@@ -41,6 +41,8 @@ const userSchema = new Schema({
     refreshToken: {
         type: String,
     },
+    encryptedPrivateKey: String,
+    publicKey: String,
 })
 
 export const userModel = mongoose.model('user', userSchema)

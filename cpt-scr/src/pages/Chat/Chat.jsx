@@ -109,6 +109,8 @@ function Chat(props) {
     }
 
     const getPrevMessageBucket = async (chatRoom) => {
+        autoCrollToBottom()
+        if (chatRoom[1]?.messages?.length > 0) return
         const seachRes = await axios.get(`${BASE_API_URL}message/previous`, {
             params: {
                 bucketSeq: chatRoom[1].seq,

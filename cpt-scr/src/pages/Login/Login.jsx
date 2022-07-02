@@ -6,7 +6,7 @@ import './Login.scss'
 import { checkEmail } from './../../utils/checkEmail'
 import { useDispatch, useSelector } from 'react-redux'
 import { loginSliceFetch } from '../../redux/features/user'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
 
 function Login(props) {
     const dispatch = useDispatch()
@@ -135,8 +135,16 @@ function Login(props) {
                 variant="outlined"
                 onClick={() => onSubmit()}
             >
-                Submit
+                Login
             </Button>
+            <p style={{ display: 'flex', fontWeight: 500 }}>
+                Don't have an account?
+                <Link to={'/register'}>
+                    <p style={{ color: '#1976d2', margin: '0 0 0 6px' }}>
+                        Register here
+                    </p>
+                </Link>
+            </p>
         </div>
     )
 }

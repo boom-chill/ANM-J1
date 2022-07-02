@@ -5,7 +5,7 @@ import Typography from '@mui/material/Typography'
 import './Register.scss'
 import { checkEmail } from '../../utils/checkEmail'
 import { useDispatch, useSelector } from 'react-redux'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
 import { DatePicker } from '@mui/x-date-pickers'
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
@@ -229,8 +229,16 @@ function Register(props) {
                     variant="outlined"
                     onClick={() => onSubmit()}
                 >
-                    Submit
+                    Register
                 </Button>
+                <p style={{ display: 'flex', fontWeight: 500 }}>
+                    Already have an account?
+                    <Link to={'/login'}>
+                        <p style={{ color: '#1976d2', margin: '0 0 0 6px' }}>
+                            Login here
+                        </p>
+                    </Link>
+                </p>
             </LocalizationProvider>
         </div>
     )

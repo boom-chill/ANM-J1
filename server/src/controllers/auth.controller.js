@@ -1,10 +1,14 @@
 import { userModel } from '../models/user.model.js'
 import jwt from 'jsonwebtoken'
-import bcrypt from 'bcrypt'
+import saltedSha256 from 'salted-sha256'
 import dotenv from 'dotenv'
+import { genKey } from './../utils/genKey.js'
+import { decryptAES, encryptAES } from './../utils/crypto-AES.js'
 
 const expAccessTime = `${3 * 3600}s` // 3h
 const expRefreshTime = `${30 * 24 * 3600}s` // 30day
+
+const SALT = process.env.SALT
 
 dotenv.config()
 
@@ -80,10 +84,10 @@ export const postLogin = async (req, res) => {
         }
 
         //check password
-        const isPasswordCorrect = await bcrypt.compare(
-            password,
-            existUser.password
-        )
+        let isPasswordCorrect = false
+        if (saltedSha256(password, SALT) == existUser.password) {
+            isPasswordCorrect = true
+        }
 
         if (isPasswordCorrect) {
             const accessToken = jwt.sign(
@@ -105,6 +109,7 @@ export const postLogin = async (req, res) => {
                 chatRooms: existUser.chatRooms || [],
                 accessToken,
                 refreshToken: existUser.refreshToken,
+                publicKey: existUser.publicKey,
             })
         } else {
             res.status(401).json({ message: 'Mật khẩu không đúng' })
@@ -116,12 +121,9 @@ export const postLogin = async (req, res) => {
 }
 
 export const postRegister = async (req, res) => {
-    console.log('hehe')
     try {
         const { email, password } = req.body
         const data = req.body
-
-        console.log('postRegister', data)
 
         const existUser = await userModel.findOne({ email: email })
 
@@ -130,9 +132,13 @@ export const postRegister = async (req, res) => {
         }
 
         //create password
-        const hashedPassword = bcrypt.hashSync(
-            password,
-            Number(process.env.SALT_ROUNDS)
+        const hashedPassword = saltedSha256(password, SALT)
+
+        const key = genKey(hashedPassword)
+
+        const encryptedPrivateKey = encryptAES(
+            hashedPassword,
+            JSON.stringify(key.privateKey)
         )
 
         const refreshToken = jwt.sign(
@@ -156,6 +162,8 @@ export const postRegister = async (req, res) => {
 
         const user = userModel({
             ...data,
+            publicKey: key.publicKey,
+            encryptedPrivateKey: encryptedPrivateKey,
             chatRooms: [],
             password: hashedPassword,
             refreshToken: refreshToken,

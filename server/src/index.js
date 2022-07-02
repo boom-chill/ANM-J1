@@ -17,6 +17,7 @@ import file from './routers/file.route.js'
 import user from './routers/user.route.js'
 import search from './routers/search.route.js'
 import message from './routers/message.route.js'
+import crypto from './routers/crypto.route.js'
 import dotenv from 'dotenv'
 import Cryptify from 'cryptify'
 import randomstring from 'randomstring'
@@ -44,6 +45,9 @@ app.use('/public', express.static('./public'))
 app.use(express.urlencoded({ extended: true, limit: '50000mb' }))
 app.use(express.json({ limit: '50000mb' }))
 app.use(cors())
+
+//localhost:5000/api/crypto
+app.use('/api/crypto', crypto)
 
 //localhost:5000/api/auth
 app.use('/api/auth', auth)

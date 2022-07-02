@@ -37,6 +37,7 @@ export const mapChatRoomsUser = async (chatRooms) => {
                                   phone: 0,
                                   address: 0,
                                   chatRooms: 0,
+                                  encryptedPrivateKey: 0,
                               }
                           )
                           .lean()
