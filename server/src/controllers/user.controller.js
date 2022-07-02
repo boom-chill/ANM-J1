@@ -33,6 +33,26 @@ export const patchUser = async (req, res) => {
     }
 }
 
+export const changePassword = async (req, res) => {
+    try {
+        const { email, newPassword } = req.params
+
+        await userModel.findByIdAndUpdate(
+            {
+                email: email,
+            },
+            {
+                password: newPassword,
+            }
+        )
+
+        res.status(200).json(detailedUser)
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({ error: err })
+    }
+}
+
 export const getUser = async (req, res) => {
     try {
         const { email } = req.params

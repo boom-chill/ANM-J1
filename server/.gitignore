@@ -128,7 +128,6 @@ dist
 
 test.http
 temp.js
-.env
 
 /public
 
