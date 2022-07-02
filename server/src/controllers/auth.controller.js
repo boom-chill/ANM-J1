@@ -101,31 +101,6 @@ export const postLogin = async (req, res) => {
                 }
             )
 
-            //const key = genKey(existUser.password)
-
-            //console.log(JSON.stringify(key.privateKey))
-
-            // const encryptedPrivateKey = encryptAES(
-            //     existUser.password,
-            //     JSON.stringify(key.privateKey)
-            // )
-
-            // console.log('key', key)
-
-            //console.log(encryptedPublicKey)
-
-            // const user = await userModel.findByIdAndUpdate(
-            //     {
-            //         _id: existUser._id,
-            //     },
-            //     {
-            //         publicKey: key.publicKey,
-            //         encryptedPrivateKey: encryptedPrivateKey,
-            //     }
-            // )
-
-            // await user.save()
-
             res.status(200).json({
                 fullName: existUser.fullName,
                 DOB: existUser.DOB,
@@ -146,12 +121,9 @@ export const postLogin = async (req, res) => {
 }
 
 export const postRegister = async (req, res) => {
-    console.log('hehe')
     try {
         const { email, password } = req.body
         const data = req.body
-
-        console.log('postRegister', data)
 
         const existUser = await userModel.findOne({ email: email })
 
@@ -160,8 +132,14 @@ export const postRegister = async (req, res) => {
         }
 
         //create password
-
         const hashedPassword = saltedSha256(password, SALT)
+
+        const key = genKey(hashedPassword)
+
+        const encryptedPrivateKey = encryptAES(
+            hashedPassword,
+            JSON.stringify(key.privateKey)
+        )
 
         const refreshToken = jwt.sign(
             {
@@ -184,6 +162,8 @@ export const postRegister = async (req, res) => {
 
         const user = userModel({
             ...data,
+            publicKey: key.publicKey,
+            encryptedPrivateKey: encryptedPrivateKey,
             chatRooms: [],
             password: hashedPassword,
             refreshToken: refreshToken,
