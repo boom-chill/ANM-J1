@@ -21,6 +21,8 @@ import {
 import ImageIcon from '@mui/icons-material/Image'
 import SendIcon from '@mui/icons-material/Send'
 import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile'
+// import randomstring from 'randomstring'
+// import { encryptRSA } from '../../utils/crypto-RSA'
 
 function Chat(props) {
     const socket = props.socket
@@ -133,6 +135,14 @@ function Chat(props) {
             setSendMessage('')
         }
     }
+
+    // const generateSessionKey = () => {
+    //     return randomstring.generate(100)
+    // }
+
+    // const encryptSessionKey = () => {
+    //     encryptRSA(publicKey, )
+    // }
 
     const handleSendFile = async (e) => {
         const rfile = e.target.files[0]

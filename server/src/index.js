@@ -18,7 +18,11 @@ import user from './routers/user.route.js'
 import search from './routers/search.route.js'
 import message from './routers/message.route.js'
 import dotenv from 'dotenv'
+import Cryptify from 'cryptify'
+import randomstring from 'randomstring'
+import { encryptRSA } from './utils/crypto-RSA.js'
 import { getUserUtils } from './controllers/user.controller.js'
+import { userModel } from './models/user.model.js'
 dotenv.config()
 
 const HOST = process.env.HOST
@@ -111,9 +115,10 @@ mongoose
                         const fileType = fileName.split('.')[1]
                         const fileData = file.src.split('base64,')[1]
                         const binaryData = new Buffer(fileData, 'base64')
-
                         const fileLink = `public/files/${fileId}.${fileType}`
 
+                        console.log(fileLink)
+                        
                         fs.writeFileSync(
                             fileLink,
                             binaryData,
@@ -121,7 +126,22 @@ mongoose
                             (err) => {
                                 console.log(err)
                             }
-                        )
+                            )
+
+                        const sessionKey = randomstring.generate(15) + "_"
+                        const receiveUser = await userModel.findOne({
+                            _id: data.messageData.to
+                        })
+
+                        const encryptedSessionKey = encryptRSA(receiveUser.publicKey, sessionKey)
+                            
+                        const instance = new Cryptify(fileLink, sessionKey)
+                        await instance
+                                .encrypt()
+                                .then(files => {
+                                    files = encryptedSessionKey + files[0] 
+                                    console.log(files)
+                                })
 
                         const sendMessage = {
                             ...data.messageData,
