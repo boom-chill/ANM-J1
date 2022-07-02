@@ -78,5 +78,6 @@ export const getUserUtils = async (email) => {
         chatRooms: existUser.chatRooms || [],
         accessToken,
         refreshToken: existUser.refreshToken,
+        publicKey: existUser.publicKey,
     }
 }

@@ -3,7 +3,7 @@ import jwt from 'jsonwebtoken'
 import saltedSha256 from 'salted-sha256'
 import dotenv from 'dotenv'
 import { genKey } from './../utils/genKey.js'
-import { encryptAES } from './../utils/crypto-AES.js'
+import { decryptAES, encryptAES } from './../utils/crypto-AES.js'
 
 const expAccessTime = `${3 * 3600}s` // 3h
 const expRefreshTime = `${30 * 24 * 3600}s` // 30day
@@ -101,21 +101,28 @@ export const postLogin = async (req, res) => {
                 }
             )
 
-            const key = genKey(existUser.password)
+            //const key = genKey(existUser.password)
 
-            const encryptedPublicKey = encryptAES(
-                JSON.stringify(key.privateKey)
-            )
+            //console.log(JSON.stringify(key.privateKey))
 
-            console.log('key', key)
-            console.log(encryptedPublicKey)
+            // const encryptedPrivateKey = encryptAES(
+            //     existUser.password,
+            //     JSON.stringify(key.privateKey)
+            // )
 
-            // const user = userModel.findByIdAndUpdate({
-            //     _id: existUser._id
-            // }, {
-            //     publicKey: key.publicKey,
-            //     privateKey: key.privateKey,
-            // })
+            // console.log('key', key)
+
+            //console.log(encryptedPublicKey)
+
+            // const user = await userModel.findByIdAndUpdate(
+            //     {
+            //         _id: existUser._id,
+            //     },
+            //     {
+            //         publicKey: key.publicKey,
+            //         encryptedPrivateKey: encryptedPrivateKey,
+            //     }
+            // )
 
             // await user.save()
 
@@ -127,6 +134,7 @@ export const postLogin = async (req, res) => {
                 chatRooms: existUser.chatRooms || [],
                 accessToken,
                 refreshToken: existUser.refreshToken,
+                publicKey: existUser.publicKey,
             })
         } else {
             res.status(401).json({ message: 'Mật khẩu không đúng' })
