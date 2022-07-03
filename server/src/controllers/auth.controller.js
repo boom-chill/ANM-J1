@@ -95,10 +95,7 @@ export const postLogin = async (req, res) => {
                     email: existUser.email,
                     _id: existUser._id,
                 },
-                process.env.ACCESS_TOKEN_SECRET,
-                {
-                    expiresIn: expAccessTime,
-                }
+                process.env.ACCESS_TOKEN_SECRET
             )
 
             res.status(200).json({

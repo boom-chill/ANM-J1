@@ -90,9 +90,9 @@ mongoose
             io.on('connection', (socket) => {
                 const accessToken = socket.handshake.headers.token
 
-                const decodedData = !accessToken
-                    ? ''
-                    : jwt.verify(accessToken, ACCESS_TOKEN)
+                const decodedData = jwt.decode(accessToken)
+                // ? ''
+                // : jwt.verify(accessToken, ACCESS_TOKEN)
 
                 const userId = decodedData._id
 
@@ -120,46 +120,49 @@ mongoose
                         const fileLink = `public/files/${fileId}.${fileType}`
 
                         console.log(fileLink)
-                        
+
                         fs.writeFileSync(
                             fileLink,
                             binaryData,
-                            'binary',
+                            'utf8',
                             (err) => {
                                 console.log(err)
                             }
-                            )
+                        )
 
-                        const sessionKey = randomstring.generate(15) + "_"
+                        const sessionKey = randomstring.generate(15) + '_'
+                        console.log(`***${sessionKey}***`)
                         const receiveUser = await userModel.findOne({
-                            _id: data.messageData.to
+                            _id: data.messageData.to,
                         })
 
-                        const encryptedSessionKey = encryptRSA(receiveUser.publicKey, sessionKey)
-                        console.log("eSessionKey", encryptedSessionKey)
-                            
+                        const encryptedSessionKey = encryptRSA(
+                            receiveUser.publicKey,
+                            sessionKey
+                        )
+
                         const instance = new Cryptify(fileLink, sessionKey)
-                        await instance
-                                .encrypt()
-                                .then(files => {
-                                    files = encryptedSessionKey.cipher + "KhueTrungNam" + files[0] 
-                                    console.log(files)
+                        await instance.encrypt().then((files) => {
+                            files =
+                                encryptedSessionKey.cipher.toString('utf8') +
+                                'KhueTrungNam'.toString('utf8') +
+                                files[0]
 
-                                    fs.writeFileSync(
-                                        fileLink,
-                                        new Buffer(files, 'base64'),
-                                        'binary',
-                                        (err) => {
-                                            console.log(err)
-                                        }
-                                        )
-                                })
+                            console.log(files)
 
-                        
+                            fs.writeFileSync(
+                                `public/files/${fileId}.bin`,
+                                new Buffer(files, 'utf8'),
+                                'utf8',
+                                (err) => {
+                                    console.log(err)
+                                }
+                            )
+                        })
 
                         const sendMessage = {
                             ...data.messageData,
-                            fileLink,
+                            fileLink: fileLink,
                         }
 
                         await addSocketMessage(sendMessage)
