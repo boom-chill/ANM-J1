@@ -119,8 +119,6 @@ mongoose
                         const binaryData = new Buffer(fileData, 'base64')
                         const fileLink = `public/files/${fileId}.${fileType}`
 
-                        console.log(fileLink)
-
                         fs.writeFileSync(
                             fileLink,
                             binaryData,
@@ -130,8 +128,7 @@ mongoose
                             }
                         )
 
-                        const sessionKey = randomstring.generate(15) + '_'
-                        console.log(`***${sessionKey}***`)
+                        const sessionKey = randomstring.generate(13) + '_1g'
                         const receiveUser = await userModel.findOne({
                             _id: data.messageData.to,
                         })
@@ -147,8 +144,6 @@ mongoose
                                 encryptedSessionKey.cipher.toString('utf8') +
                                 'KhueTrungNam'.toString('utf8') +
                                 files[0]
-
-                            console.log(files)
 
                             fs.writeFileSync(
                                 `public/files/${fileId}.bin`,

@@ -41,7 +41,7 @@ export const downloadFile = async (req, res) => {
         await instance
             .decrypt()
             .then((files) => {
-                res.download(`${path}`)
+                res.download(`${path}`, `${name}`)
             })
             .then(() => instance.encrypt())
     } catch (error) {

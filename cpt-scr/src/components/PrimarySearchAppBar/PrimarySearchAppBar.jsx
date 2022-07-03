@@ -114,6 +114,14 @@ export default function PrimarySearchAppBar(props) {
             </MenuItem>
             <MenuItem
                 onClick={() => {
+                    navigate('/user/change-password')
+                    handleMenuClose()
+                }}
+            >
+                Change password
+            </MenuItem>
+            <MenuItem
+                onClick={() => {
                     handleLogout()
                     handleMenuClose()
                 }}

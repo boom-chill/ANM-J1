@@ -14,6 +14,7 @@ import { getUserSliceFetch, updateUser } from './redux/features/user'
 import { getLocalStorage } from './utils/localStorage'
 import Register from './pages/Register/Register'
 import Edit from './pages/User/Edit/Edit'
+import ChangePassword from './pages/User/ChangePassword/ChangePassword'
 
 function App() {
     const user = useSelector((state) => state.userState.user)
@@ -72,6 +73,14 @@ function App() {
                     element={
                         <ProtectedRoute>
                             <Chat socket={socket} />
+                        </ProtectedRoute>
+                    }
+                />
+                <Route
+                    path="/user/change-password"
+                    element={
+                        <ProtectedRoute>
+                            <ChangePassword />
                         </ProtectedRoute>
                     }
                 />

@@ -10,7 +10,6 @@ export const encryptAES = (key, text) => {
     const encryptedBytes = aesEcb.encrypt(textBytes)
     const encryptedHex = aesjs.utils.hex.fromBytes(encryptedBytes)
 
-    console.log('encryptedHex', encryptedHex)
     return encryptedHex // hex
 }
 
@@ -22,6 +21,5 @@ export const decryptAES = (key, encryptedHex) => {
     const decryptedBytes = aesCbc.decrypt(encryptedBytes)
     const decryptedText = aesjs.utils.utf8.fromBytes(decryptedBytes)
 
-    console.log('decryptedText', decryptedText)
     return decryptedText // string
 }
