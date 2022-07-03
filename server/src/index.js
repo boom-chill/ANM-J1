@@ -128,7 +128,7 @@ mongoose
                             }
                         )
 
-                        const sessionKey = randomstring.generate(13) + '_1g'
+                        const sessionKey = randomstring.generate(12) + 'Az0_'
                         const receiveUser = await userModel.findOne({
                             _id: data.messageData.to,
                         })
