@@ -62,7 +62,6 @@ function Chat(props) {
             return
         } else {
             socket?.on('receive_message', (data) => {
-                console.log(data)
                 dispatch(addRecieveMessage(data))
                 autoCrollToBottom()
             })
@@ -149,12 +148,6 @@ function Chat(props) {
     const handleSendFile = async (e) => {
         const rfile = e.target.files[0]
         if (rfile) {
-            //setSelectedFile(e.target.files[0])
-            // console.log(rfile)
-            // let data = new FormData()
-            // data.append('file', rfile)
-            // console.log(data)
-
             let fileReader = new FileReader()
             fileReader.readAsDataURL(rfile)
 
@@ -169,8 +162,6 @@ function Chat(props) {
                     lastModifiedDate: rfile.lastModifiedDate,
                     new: true,
                 }
-
-                console.log('file', file)
 
                 if (curChatRoom && file) {
                     const messageData = {
@@ -306,7 +297,7 @@ function Chat(props) {
                                                     {messageContent.messageType ===
                                                     'FILE' ? (
                                                         <a
-                                                            href={`${BASE_API_URL}file/download?path=${messageContent.fileLink}&name=${messageContent.message}`}
+                                                            href={`${BASE_API_URL}file/download?path=${messageContent.fileLink}&name=${messageContent.message}&email=${user.email}`}
                                                             download
                                                         >
                                                             <div className="message-content--file">
@@ -348,7 +339,7 @@ function Chat(props) {
                                                 {messageContent.messageType ===
                                                 'FILE' ? (
                                                     <a
-                                                        href={`${BASE_API_URL}file/download?path=${messageContent.fileLink}&name=${messageContent.message}`}
+                                                        href={`${BASE_API_URL}file/download?path=${messageContent.fileLink}&name=${messageContent.message}&email=${user.email}`}
                                                         download
                                                     >
                                                         <div className="message-content--file">

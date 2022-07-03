@@ -44,11 +44,9 @@ function Edit(props) {
     }
 
     const onSubmit = async () => {
-        console.log(editUserData)
-        console.log(user)
         setIsSubmit(true)
         if (user) {
-            dispatch(editSliceFetch({...editUserData}))
+            dispatch(editSliceFetch({ ...editUserData }))
             navigate(-1)
         }
     }
@@ -149,12 +147,12 @@ function Edit(props) {
                     error={isSubmit && editUserData.address === ''}
                     onKeyDown={(e) => handleKeyDown(e)}
                 />
-            
+
                 <Button
                     className="login_form_btn"
                     variant="outlined"
                     onClick={() => onSubmit()}
-                    style={{marginBottom: '15px', width: '100px'}}
+                    style={{ marginBottom: '15px', width: '100px' }}
                 >
                     Edit
                 </Button>
@@ -162,7 +160,7 @@ function Edit(props) {
                     className="login_form_btn"
                     variant="contained"
                     onClick={() => navigate(-1)}
-                    style={{width: '100px'}}
+                    style={{ width: '100px' }}
                 >
                     Back
                 </Button>

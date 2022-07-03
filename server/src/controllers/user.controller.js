@@ -2,9 +2,11 @@ import { userModel } from '../models/user.model.js'
 import jwt from 'jsonwebtoken'
 import dotenv from 'dotenv'
 import { mapChatRoomsUser } from '../utils/mapChatRoomsUser.js'
-
+import saltedSha256 from 'salted-sha256'
 const expAccessTime = `${3 * 3600}s` // 3h
 const expRefreshTime = `${30 * 24 * 3600}s` // 30day
+
+const SALT = process.env.SALT
 
 dotenv.config()
 
@@ -35,18 +37,21 @@ export const patchUser = async (req, res) => {
 
 export const changePassword = async (req, res) => {
     try {
-        const { email, newPassword } = req.params
+        const { email, newPassword } = req.body
+        console.log(email)
 
-        await userModel.findByIdAndUpdate(
+        const hashedPassword = saltedSha256(newPassword, SALT)
+
+        await userModel.findOneAndUpdate(
             {
                 email: email,
             },
             {
-                password: newPassword,
+                password: hashedPassword,
             }
         )
 
-        res.status(200).json(detailedUser)
+        res.status(200).json('sc')
     } catch (error) {
         console.log(error)
         res.status(500).json({ error: err })
