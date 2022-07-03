@@ -136,14 +136,26 @@ mongoose
                         })
 
                         const encryptedSessionKey = encryptRSA(receiveUser.publicKey, sessionKey)
+                        console.log("eSessionKey", encryptedSessionKey)
                             
                         const instance = new Cryptify(fileLink, sessionKey)
                         await instance
                                 .encrypt()
                                 .then(files => {
-                                    files = encryptedSessionKey + files[0] 
+                                    files = encryptedSessionKey.cipher + "KhueTrungNam" + files[0] 
                                     console.log(files)
+
+                                    fs.writeFileSync(
+                                        fileLink,
+                                        new Buffer(files, 'base64'),
+                                        'binary',
+                                        (err) => {
+                                            console.log(err)
+                                        }
+                                        )
                                 })
+
+                        
 
                         const sendMessage = {
                             ...data.messageData,
