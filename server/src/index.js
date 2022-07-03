@@ -82,8 +82,8 @@ mongoose
     })
     .then(console.log('Connected to DB'))
     .then(async () => {
-        io.on('connection', (socket) => {
-            try {
+        try {
+            io.on('connection', (socket) => {
                 const accessToken = socket.handshake.headers.token
 
                 const decodedData = !accessToken
@@ -97,7 +97,6 @@ mongoose
                 socket.join(`${userId}`)
 
                 socket.on('send_message', async (data) => {
-                    console.log(data)
                     if (data.from && data.chatRoomId) {
                         await addSocketMessage(data)
                         io.to(data.to).emit('receive_message', data)
@@ -106,7 +105,6 @@ mongoose
 
                 socket.on('send_file', async (data) => {
                     if (data.messageData.from) {
-                        console.log(data.file.name)
                         //add file
                         const file = data.file
                         const fileName = file.name
@@ -156,6 +154,10 @@ mongoose
                     }
                 })
 
+                socket.on('connect_error', (err) => {
+                    console.log(`connect_error due to ${err.message}`)
+                })
+
                 socket.on('disconnect', () => {
                     //console.log('delete room', socket.id)
                     removeOnlineUser(socket.id)
@@ -163,11 +165,11 @@ mongoose
                 })
 
                 console.log(onlineUser)
-            } catch (err) {
-                console.log('socket', err)
-                socket.disconnect()
-            }
-        })
+            })
+        } catch (err) {
+            console.log('socket', err)
+            socket.disconnect()
+        }
 
         server.listen(PORT, () =>
             console.log(`Server is running on ${HOST}:${PORT}`)

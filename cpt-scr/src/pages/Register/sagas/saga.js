@@ -24,7 +24,6 @@ function* postRegister(action) {
         failSlice: registerSliceFail,
     }
     yield call(apiCall, apiArgs)
-    console.log('action', action)
 }
 
 export function* registerSaga() {

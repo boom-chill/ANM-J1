@@ -12,7 +12,6 @@ export const messageSlice = createSlice({
         },
 
         addRecieveMessage: (state, action) => {
-            console.log(action.payload)
             if (state[action.payload.chatRoomId]) {
                 return {
                     ...state,
