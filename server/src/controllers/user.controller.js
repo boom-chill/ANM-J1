@@ -89,10 +89,7 @@ export const getUserUtils = async (email) => {
             email: existUser.email,
             _id: existUser._id,
         },
-        process.env.ACCESS_TOKEN_SECRET,
-        {
-            expiresIn: expAccessTime,
-        }
+        process.env.ACCESS_TOKEN_SECRET
     )
 
     return {

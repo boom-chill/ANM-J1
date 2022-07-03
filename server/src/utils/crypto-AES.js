@@ -35,6 +35,6 @@ export const decryptAES = (key, encryptedHex) => {
         .fromBytes(decryptedBytes)
         .replace(/\s+/g, '')
 
-    console.log('decryptedText', decryptedText)
+    //console.log('decryptedText', decryptedText)
     return decryptedText // string
 }

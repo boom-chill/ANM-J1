@@ -328,17 +328,18 @@ function Chat(props) {
                                             <div className="message-content">
                                                 {messageContent.messageType ===
                                                 'FILE' ? (
-                                                    <a
-                                                        href={`${BASE_API_URL}file/download?path=${messageContent.fileLink}&name=${messageContent.message}&email=${user.email}`}
-                                                        download
+                                                    <div
+                                                        className="message-content--file"
+                                                        style={{
+                                                            color: 'black',
+                                                            fontWeight: 500,
+                                                        }}
                                                     >
-                                                        <div className="message-content--file">
-                                                            <InsertDriveFileIcon />
-                                                            <p>
-                                                                {`  ${messageContent.message}`}
-                                                            </p>
-                                                        </div>
-                                                    </a>
+                                                        <InsertDriveFileIcon />
+                                                        <p>
+                                                            {`  ${messageContent.message}`}
+                                                        </p>
+                                                    </div>
                                                 ) : (
                                                     <p>
                                                         {messageContent.message}

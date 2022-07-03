@@ -6,6 +6,6 @@ export const decryptRSA = (privateKey, CipherText) => {
 }
 
 export const encryptRSA = (publicKey, PlainText) => {
-    const EncryptionRes = cryptico.encrypt(PlainText, publicKey)
+    const EncryptionRes = cryptico.decrypt(PlainText, publicKey)
     return EncryptionRes
 }

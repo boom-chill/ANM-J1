@@ -4,7 +4,7 @@ import cryptico from 'cryptico'
 dotenv.config()
 
 export const genKey = (passphrase, BITS = 2048) => {
-    let PASSPHRASE = process.env.PASSPHRASEc
+    let PASSPHRASE = process.env.PASSPHRASE
 
     if (passphrase) {
         PASSPHRASE = passphrase
@@ -12,6 +12,8 @@ export const genKey = (passphrase, BITS = 2048) => {
 
     const MattsRSAkey = cryptico.generateRSAKey(PASSPHRASE, BITS)
     const MattsPublicKeyString = cryptico.publicKeyString(MattsRSAkey)
+
+    //console.log(MattsRSAkey)
 
     return {
         privateKey: MattsRSAkey,
